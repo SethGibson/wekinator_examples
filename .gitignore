@@ -8,3 +8,7 @@ all_source*
 *.app*
 *.DS_*
 *.xcworkspacedata
+x64
+*.sdf
+.vs
+*.opensdf
