@@ -4,6 +4,8 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/Camera.h"
 #include "cinder/gl/gl.h"
+#include "cinder/params/Params.h"
+#include "cinder/Rand.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -17,6 +19,7 @@ struct Ring
 	Ring(Color pTint, vec2 pSize) :
 		Size(pSize), Position(vec3()), BaseTint(pTint), Active(true)
 	{
+		Speed = randFloat(0.5f, 2.0f);
 	}
 
 	void Step(float pSpeed)
@@ -24,7 +27,7 @@ struct Ring
 		if (Position.y >= kEyeDepth)
 			Active = false;
 		else {
-			Position.y += pSpeed;
+			Position.y += pSpeed*Speed;
 			auto zRatio = Position.y / kEyeDepth;
 			auto tint = lerp<Color>(Color(1, 0, 0), BaseTint, zRatio);
 			Tint.r = tint.r; Tint.g = tint.g; Tint.b = tint.b;
@@ -37,6 +40,7 @@ struct Ring
 	Color	BaseTint;
 	vec3	Position;
 	vec2	Size;
+	float	Speed;
 };
 class Wormhole3ContinuousOutputs : public App {
   public:
@@ -48,6 +52,8 @@ class Wormhole3ContinuousOutputs : public App {
 	void draw() override;
 
   private:
+	  void setupGUI();
+
 	  vec2				mMousePos,
 						mRingSize;
 
@@ -57,4 +63,12 @@ class Wormhole3ContinuousOutputs : public App {
 	  gl::VboRef		mData;
 
 	  CameraPersp		mCamera;
+
+	  params::InterfaceGlRef	mGUI;
+	  float	mParamRingSpeed,
+			mParamRotSpeed;
+
+	  int	mParamSpawnTime;
+	  
+
 };

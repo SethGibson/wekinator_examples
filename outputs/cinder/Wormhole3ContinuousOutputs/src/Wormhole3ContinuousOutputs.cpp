@@ -1,10 +1,9 @@
 #include "Wormhole3ContinuousOutputs.h"
 
-const float kRingSpeed = 0.015f;
-const int kSpawnTime = 10;
-const float kRotSpeed = 0.01f;
 void Wormhole3ContinuousOutputs::setup()
 {
+	setupGUI();
+
 	mRingSize = vec2(1);
 	mCamera.setPerspective(60.0f, getWindowAspectRatio(), 0.1f, 10.f);
 	mCamera.lookAt(vec3(0, kEyeDepth, 0), vec3(), vec3(0, 1, 0));
@@ -31,6 +30,7 @@ void Wormhole3ContinuousOutputs::mouseDown( MouseEvent event )
 	mRingSize.y = lmap<float>(event.getPos().y, 0, getWindowHeight(), 0.1f, 1.0f);
 
 	console() << "RingSize: " << to_string(mRingSize.x) << ", " << to_string(mRingSize.y) << endl;
+
 }
 
 void Wormhole3ContinuousOutputs::mouseMove(MouseEvent event)
@@ -50,12 +50,12 @@ void Wormhole3ContinuousOutputs::update()
 			ri = mRings.erase(ri);
 		}
 		else {
-			ri->Step(kRingSpeed);
+			ri->Step(mParamRingSpeed);
 			++ri;
 		}
 	}
 
-	if (getElapsedFrames() % kSpawnTime == 0) {
+	if (getElapsedFrames() % mParamSpawnTime == 0) {
 		auto r = mMousePos.x / getWindowWidth();
 		auto b = mMousePos.y / getWindowHeight();
 
@@ -73,10 +73,26 @@ void Wormhole3ContinuousOutputs::draw()
 	{
 		gl::ScopedGlslProg shdr(mShader);
 		gl::pushModelMatrix();
-		gl::rotate(getElapsedFrames()*kRotSpeed, vec3(0, 1, 0));
+
+		gl::rotate(getElapsedFrames()*mParamRotSpeed, vec3(0, 1, 0));
 		mDraw->drawInstanced(mRings.size());
 		gl::popModelMatrix();
 	}
+
+	gl::setMatricesWindow(getWindowSize());
+	mGUI->draw();
+}
+
+void Wormhole3ContinuousOutputs::setupGUI()
+{
+	mParamRingSpeed = 0.1f;
+	mParamRotSpeed = 0.01f;
+	mParamSpawnTime = 30;
+
+	mGUI = params::InterfaceGl::create("Params", ivec2(300, 200));
+	mGUI->addParam("paramRingSpeed", &mParamRingSpeed, "label='Ring Speed'", false);
+	mGUI->addParam("paramRotSpeed", &mParamRotSpeed, "label='Spin Speed'", false);
+	mGUI->addParam("paramSpawnTime", &mParamSpawnTime, "label='Spawn Time'", false);
 }
 
 void prepareSettings(App::Settings *pSettings)
