@@ -107,7 +107,7 @@ void Mouse2InputXY::draw()
 	//Draw debug text
 	{
 		auto mid = getWindowCenter();
-		string msg = "'F' to toggle fullscreen, 'Q' to quit";
+		string msg = "'F' to toggle fullscreen, 'R' to toggle recording/running, 'Q' to quit";
 		gl::drawString(msg, vec2(10, getWindowHeight() - 20), Color(0, 1, 0), mFont);
 
 		auto strPos = vec2(mid.x + 10, getWindowHeight() - 20);
