@@ -24,13 +24,15 @@ class Mouse2InputXY : public App {
   private:
 	  void	sendMousePos();
 
+	  bool				mIsSending,
+						mIsRunning;
 	  vec2				mMousePos;
 	  osc::SenderUdp	mSender;
 	  Font				mFont;
 };
 
 Mouse2InputXY::Mouse2InputXY() :
-	mSender(8888, kHost, kPort)
+	mSender(8888, kHost, kPort), mIsSending(false), mIsRunning(false), mMousePos(vec2())
 {
 	mFont = Font("Calibri", 24);
 }
@@ -42,13 +44,16 @@ void Mouse2InputXY::setup()
 
 void Mouse2InputXY::mouseDown( MouseEvent event )
 {
-	mouseMove(event);
+	if (!mIsRunning) {
+		mIsSending = !mIsSending;
+	}
 }
 
 void Mouse2InputXY::mouseMove(MouseEvent event)
 {
-	mMousePos = event.getPos();
-	//sendMousePos();
+	if (!mIsSending) {
+		mMousePos = event.getPos();
+	}
 }
 
 void Mouse2InputXY::keyDown(KeyEvent event)
@@ -62,11 +67,17 @@ void Mouse2InputXY::keyDown(KeyEvent event)
 	case KeyEvent::KEY_q:
 		quit();
 		break;
+	case KeyEvent::KEY_r:
+		mIsRunning = !mIsRunning;
+		break;
 	}
 }
 
 void Mouse2InputXY::update()
 {
+	if(mIsSending||mIsRunning) {
+		sendMousePos();
+	}
 }
 
 void Mouse2InputXY::draw()
@@ -83,8 +94,14 @@ void Mouse2InputXY::draw()
 
 	//draw center
 	{
-		gl::color(Color(0, 1, 0));
-		gl::drawSolidCircle(mMousePos, 5);
+		if (mIsSending||mIsRunning) {
+			gl::color(Color(0, 1, 0));
+			gl::drawSolidCircle(mMousePos, 20);
+		}
+		else {
+			gl::color(Color(1, 1, 0));
+			gl::drawSolidCircle(mMousePos, 5);
+		}
 	}
 
 	//Draw debug text
@@ -93,9 +110,15 @@ void Mouse2InputXY::draw()
 		string msg = "'F' to toggle fullscreen, 'Q' to quit";
 		gl::drawString(msg, vec2(10, getWindowHeight() - 20), Color(0, 1, 0), mFont);
 
-		msg = "Sending Position X=" + to_string((int)mMousePos.x) + ", Y=" + to_string((int)mMousePos.y);
-		auto strPos = vec2(mid.x+10, getWindowHeight() - 20);
-		gl::drawString(msg, strPos, Color(0,1,0), mFont);
+		auto strPos = vec2(mid.x + 10, getWindowHeight() - 20);
+		if (mIsSending||mIsRunning) {
+			msg = "Sending Position X=" + to_string((int)mMousePos.x) + ", Y=" + to_string((int)mMousePos.y);
+			gl::drawString(msg, strPos, Color(0, 1, 0), mFont);
+		}
+		else {
+			msg = "Not Sending";
+			gl::drawString(msg, strPos, Color(1, 0, 0), mFont);
+		}
 	}
 }
 
