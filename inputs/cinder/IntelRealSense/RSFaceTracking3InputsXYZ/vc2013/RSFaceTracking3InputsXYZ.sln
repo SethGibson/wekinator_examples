@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSFaceTracking3InputsXYW", "RSFaceTracking3InputsXYW.vcxproj", "{769D6186-145B-499D-B1A8-2039D36B2AA8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSFaceTracking3InputsXYZ", "RSFaceTracking3InputsXYZ.vcxproj", "{769D6186-145B-499D-B1A8-2039D36B2AA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
