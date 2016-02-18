@@ -6,7 +6,7 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class RSFaceTracking3InputsXYWApp : public App {
+class RSFaceTracking3InputsXYZ : public App {
   public:
 	void setup() override;
 	void mouseDown( MouseEvent event ) override;
@@ -14,21 +14,21 @@ class RSFaceTracking3InputsXYWApp : public App {
 	void draw() override;
 };
 
-void RSFaceTracking3InputsXYWApp::setup()
+void RSFaceTracking3InputsXYZ::setup()
 {
 }
 
-void RSFaceTracking3InputsXYWApp::mouseDown( MouseEvent event )
+void RSFaceTracking3InputsXYZ::mouseDown( MouseEvent event )
 {
 }
 
-void RSFaceTracking3InputsXYWApp::update()
+void RSFaceTracking3InputsXYZ::update()
 {
 }
 
-void RSFaceTracking3InputsXYWApp::draw()
+void RSFaceTracking3InputsXYZ::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) ); 
 }
 
-CINDER_APP( RSFaceTracking3InputsXYWApp, RendererGl )
+CINDER_APP( RSFaceTracking3InputsXYZ, RendererGl )
